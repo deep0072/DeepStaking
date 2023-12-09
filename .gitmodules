@@ -1,0 +1,3 @@
+[submodule "DeepStaking/lib/forge-std"]
+	path = DeepStaking/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
