@@ -1,3 +1,6 @@
 [submodule "DeepStaking/lib/forge-std"]
 	path = DeepStaking/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "DeepStaking/lib/openzeppelin-contracts"]
+	path = DeepStaking/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
