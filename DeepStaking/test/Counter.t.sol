@@ -33,6 +33,11 @@ contract CounterTest is Test {
         uint256 rewardAmount = deepStakingContract.earned(address(this));
         console.log(rewardAmount, "rewardAmount");
     }
+
+    function test_getTotalStakedValue() public {
+        console.log(deepStakingContract.getTotalStakedTokenInContract(), "total staked amount");
+
+    }
 // function testFuzz_SetNumber(uint256 x) public {
 } //     counter.setNumber(x);
     //     assertEq(counter.number(), x);

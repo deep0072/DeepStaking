@@ -3,7 +3,30 @@ pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract RewardToken is ERC20 {
+
+    address s_owner;
     constructor() ERC20("DeepToken", "DT") {
-        _mint(0x0000000000000000000000000000000000000001, 100000 * 1e18);
+        _mint(msg.sender, 100000 * 1e18);
+        s_owner = msg.sender;
+
+
     }
+
+    function getOwner() public view returns(address){
+        return s_owner;
+    }
+
+    function getOwnerBalance() public view returns(uint256){
+        return balanceOf(s_owner);
+    }
+
+    function approveSpending(address spender, uint256 tokenAmount) public returns(bool) {
+        bool success  = approve(spender,tokenAmount);
+        require(success, "not approved");
+
+    }
+
+    
+
+   
 }

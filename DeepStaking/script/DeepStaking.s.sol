@@ -10,16 +10,18 @@ contract DeepStakingScript is Script {
     function setUp() public {}
 
     function run() public returns (RewardToken, DeepStaking) {
-        RewardDeployToken rewardTokenContract = new RewardDeployToken();
-        RewardToken rewardToken = rewardTokenContract.run();
+       
+       
+
+       
+        vm.startBroadcast(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80);
         
-
-        vm.startBroadcast();
-
         // console.log(address(rewardToken), "reward token contract");
 
-        DeepStaking stakeContract =
-            new DeepStaking(address(rewardToken),address(rewardToken));
+        RewardToken rewardToken = new RewardToken();
+        DeepStaking stakeContract =new DeepStaking(address(rewardToken),address(rewardToken));
+            
+            
 
         vm.stopBroadcast();
 

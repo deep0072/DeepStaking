@@ -8,9 +8,11 @@
 pragma solidity ^0.8.13;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {RewardToken} from "./RewardToken.sol";
+
 
 error Staking__TransferFailed();
-error Staking__WithdrawalFailed();
+error Staking__WithdrawalFaile();
 error Staking_NeedsMoreThanZero();
 
 contract DeepStaking {
@@ -23,11 +25,14 @@ contract DeepStaking {
     // a mapping of how much rewards each address has been paid
     mapping(address => uint256) public s_balances;
 
+   
     // a mapping of how much rewards each address has to claim;
     mapping(address => uint256) public s_rewards;
     uint256 public s_totalStakedToken;
     uint256 public s_rewardPerTokenStored; // this is the exact token will be given to staker as a reward
     uint256 public s_lastUpdateTime;
+
+    //1000000000000000000
 
     constructor(address stakingToken, address rewardToken) {
         s_stakingToken = IERC20(stakingToken);
@@ -40,6 +45,7 @@ contract DeepStaking {
         }
         _;
     }
+
 
     modifier updateReward(address account) {
         s_rewardPerTokenStored = rewardPerToken();
@@ -81,9 +87,11 @@ contract DeepStaking {
         updateReward(msg.sender)
         moreThanZero(tokenAmount)
     {
-        // keep track how muck token user staked
-        // how mouch token contract staked
+        // keep track how much   token user staked
+        // how mouch token staked in contract
         // transfer token to this contract
+        
+      
         s_balances[msg.sender] += tokenAmount;
         s_totalStakedToken = s_totalStakedToken + tokenAmount;
 
@@ -107,7 +115,7 @@ contract DeepStaking {
         bool success = s_stakingToken.transfer(msg.sender, amount);
 
         if (!success) {
-            revert Staking__WithdrawalFailed();
+            revert Staking__WithdrawalFaile();
         }
     }
 
@@ -130,5 +138,21 @@ contract DeepStaking {
         if (!success) {
             revert Staking__TransferFailed();
         }
+    }
+
+    
+
+
+    function claimedReward(address _user) public view returns(uint256) {
+        return s_rewards[_user];
+    }
+
+    function getTotalStakedTokenByUser(address _user) public view returns(uint256) {
+        return s_balances[_user];
+
+    }
+    function getTotalStakedTokenInContract() public view returns(uint256) {
+        return s_totalStakedToken;
+
     }
 }
