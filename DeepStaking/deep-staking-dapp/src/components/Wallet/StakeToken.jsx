@@ -1,55 +1,57 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
+
 import { parseEther } from "viem";
 
-import { contractAddress, deepStakingAbi,rewardTokenAddress,RewardAbi } from "../../ABI/abi";
+import { contractAddress, deepStakingAbi } from "../../ABI/abi";
 
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+
+export const StakeToken = ({ tokenAmount }) => {
  
-  useContractWrite,
-  usePrepareContractWrite,
-} from "wagmi";
 
+  console.log("amount", tokenAmount)
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: deepStakingAbi,
+    functionName: "staking",
+    args: [parseEther(tokenAmount)],
+  });
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
-export const StakeToken = ({btnStatus}) => {
-    const [input,setInput] = useState('')
-  
-  
-    console.log(btnStatus, "input")
-  
-    const { config } = usePrepareContractWrite({
-      address: contractAddress,
-      abi: deepStakingAbi,
-      functionName: "staking",
-      args:[input]
-    });
-    const { data, isLoading, isSuccess, write } = useContractWrite(config);
-  
-    const handleClick = async()=>{
-      console.log("clicked")
-      await write?.()
-  
-    }
-   
-  
-    return (
-      <div>
-   
+  return (
+    <div>
+      <br />
+
+      {/* {isLoading && <div>Check Wallet</div>}
+      {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>} */}
+      { write?.()}
+      {/* {btnStatus && (
         <div>
-        <input type="number" onChange={(e)=>setInput(parseEther(e.target.value))} />
+          <Label
+            htmlFor="name"
+            onChange={(e) => setInput(parseEther(e.target.value))}
+          >
+            Enter amount
+          </Label>
+          <Input id="name" placeholder="Stake token" />
+
+          <CardFooter className="flex justify-content-end">
+            <Button onClick={handleClick}>Stake</Button>
+          </CardFooter>
+         
         </div>
-        <br />
-      
-          <div>
-          <button disabled={btnStatus} class="text-white bg-green-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"   onClick={handleClick}>
-            stakeToken
-          </button>
-          </div>
-  
-        
-          
-      
-        {isLoading && <div>Check Wallet</div>}
-        {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
-      </div>
-    );
-  };
+      )} */}
+    </div>
+  );
+};

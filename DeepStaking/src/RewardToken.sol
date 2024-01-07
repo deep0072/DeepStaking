@@ -11,6 +11,7 @@ contract RewardToken is ERC20 {
 
 
     }
+    
 
     function getOwner() public view returns(address){
         return s_owner;

@@ -1,13 +1,12 @@
-import { WagmiConfig, createConfig, configureChains } from 'wagmi'
+import {createConfig, configureChains } from 'wagmi'
 import { localhost } from 'viem/chains'
  
-import { alchemyProvider } from 'wagmi/providers/alchemy'
+
 import { publicProvider } from 'wagmi/providers/public'
  
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
+
 import { InjectedConnector } from 'wagmi/connectors/injected'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
+
 
 const { chains, publicClient } = configureChains(
     [localhost],
@@ -15,7 +14,7 @@ const { chains, publicClient } = configureChains(
   )
 
 
-  // Set up wagmi config
+// Set up wagmi config
 export const config = createConfig({
     autoConnect: false,
     connectors: [
