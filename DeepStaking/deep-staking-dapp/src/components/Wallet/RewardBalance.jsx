@@ -1,9 +1,9 @@
-import React from 'react'
+// import React from 'react'
 
-const RewardBalance = ({userAddress}) => {
-  return (
-    <div>RewardBalance</div>
-  )
-}
+// const RewardBalance = ({userAddress}) => {
+//   return (
+//     <div>RewardBalance</div>
+//   )
+// }
 
-export default RewardBalance
+// export default RewardBalance

@@ -27,6 +27,11 @@ contract RewardToken is ERC20 {
 
     }
 
+
+   
+     function checkTotalApprovedAmount(address spender) external view returns (uint256) {
+        return allowance(s_owner, spender);
+    }
     
 
    

@@ -9,7 +9,7 @@ import {
 import { Approve } from "./Approve";
 import { StakeToken } from "./StakeToken";
 
-const CardWrapper = () => {
+const ApproveStakeWrapper = () => {
   return (
     <Card style={{ margin: "auto", marginTop: "2px" }} className="w-[350px]">
       <CardHeader>
@@ -25,4 +25,4 @@ const CardWrapper = () => {
   );
 };
 
-export default CardWrapper;
+export default ApproveStakeWrapper;
