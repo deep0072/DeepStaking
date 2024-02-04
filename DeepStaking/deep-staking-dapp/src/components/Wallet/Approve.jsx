@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { parseEther } from "viem";
 import { useSimulateContract, useWriteContract } from "wagmi";
 
-import { contractAddress, rewardTokenAddress, RewardAbi } from "../../ABI/abi";
+import { contractAddress, rewardTokenAddress, RewardAbi,deepStakingAbi } from "../../ABI/abi";
 import { StakeToken } from "./StakeToken";
 import { CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
@@ -12,21 +12,42 @@ import { ButtonLoader } from "./utils/Loader";
 export const Approve = () => {
   const [amount, setAmount] = useState("");
 
+
   
 
 
-  const { writeContract,isPending
+  const { data,writeContract,isPending
   } = useWriteContract();
 
-  const handleClick = ()=>{
+  const handleClick = async()=>{
     console.log(isPending, "isPending")
-    console.log(writeContract({
+    
+   
+    await writeContract({
       address: rewardTokenAddress,
       abi: RewardAbi,
       functionName: "approve",
       args: [contractAddress, parseEther(amount)],
-    }));}
+    })
 
+    if (data){
+      await writeContract({
+        address: contractAddress,
+        abi: deepStakingAbi,
+        functionName: "staking",
+        args: [parseEther(amount)],
+})
+
+
+    }
+    
+
+   
+  
+  
+  }
+
+  
 
   
 
@@ -50,7 +71,10 @@ export const Approve = () => {
            
               Submit
             </Button>
+           
           )}
+          
+
           {/* {data && <StakeToken tokenAmount={amount} />} */}
         </CardFooter>
       </div>
