@@ -11,10 +11,11 @@ contract DeepStakingScript is Script {
 
     function run() public returns (RewardToken, DeepStaking) {
        
-       
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+     
 
        
-        vm.startBroadcast(0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d);
+        vm.startBroadcast(deployerPrivateKey);
         
         // console.log(address(rewardToken), "reward token contract");
 

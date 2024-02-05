@@ -5,9 +5,9 @@ import { injected } from "wagmi/connectors";
 import { createClient, http } from "viem";
 
 export const config = createConfig({
-  chains: [localhost],
+  chains: ["sepolia"],
   connectors: [injected({ target: "metaMask", shimDisconnect: false })],
   transports: {
-    [localhost.id]: http("http://127.0.0.1:8545"),
+    [localhost.id]: http(process.env.ALCHEMY_RPC_URL),
   },
 });
