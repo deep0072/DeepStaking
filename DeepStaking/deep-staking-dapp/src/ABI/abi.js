@@ -2,8 +2,8 @@ import {abi as rewardAbi} from  "../../../out/RewardToken.sol/RewardToken.json";
 import {abi}  from "../../../out/Staking.sol/DeepStaking.json";
 
 
-export const  contractAddress =  "0x71C95911E9a5D330f4D621842EC243EE1343292e"
-export const rewardTokenAddress = "0x8464135c8F25Da09e49BC8782676a84730C318bC"
+export const  contractAddress =  "0x65F4014650F58dF4197ce80f856f02F5D8E1C43D"
+export const rewardTokenAddress = "0x90EC72EB43C1d9C96ac004d4365471a2ABAba504"
 
 export const deepStakingAbi = abi;
 export const RewardAbi = rewardAbi;

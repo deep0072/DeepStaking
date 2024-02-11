@@ -1,13 +1,18 @@
-import { createConfig } from "wagmi";
+import { 
+  createConfig, 
+  http 
+} from '@wagmi/core'
 import { mainnet, sepolia, localhost } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 
-import { createClient, http } from "viem";
+
+
+
 
 export const config = createConfig({
-  chains: ["sepolia"],
+  chains: [sepolia],
   connectors: [injected({ target: "metaMask", shimDisconnect: false })],
   transports: {
-    [localhost.id]: http(process.env.ALCHEMY_RPC_URL),
+    [sepolia.id]: http(import.meta.env.VITE_APP_SEPOLIA_ALCHEMY_RPC_URL),
   },
 });

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
@@ -19,6 +18,8 @@ import GetTotalStakedToken from "./GetTotalStakedToken";
 import TruncateEthAddressFromMid from "./utils/truncateAddress";
 import AllowanceAmount from "./AllowanceAmount";
 import ApproveStakeWrapper from "./ApproveStakeWrapper";
+import TotalStakeContextProvider from "../context/TotalStakeContextProvider";
+import WithDraw from "./WithDraw";
 // import AllowanceAmount from "./AllowanceAmount";
 
 const Wallets = () => {
@@ -35,7 +36,6 @@ const Wallets = () => {
     }
   };
 
-
   // connect wallet
   // show the address and balance
   const { address, isConnected } = useAccount();
@@ -45,7 +45,6 @@ const Wallets = () => {
     unit: "ether",
   });
   console.log(result, "balance");
-
 
   const handleClick = () => {
     setReadContract(!readContract);
@@ -68,21 +67,18 @@ const Wallets = () => {
           </div>
 
           <div className=" mt-8 bg-black-500 text-white-200  rounded-lg border-b-2 border-green-600  hover:shadow-[0_1px_3px_#00FF00,0_1px_1px_#00FF00,1px_0_1px_#00FF00] p-4">
-           
-              <div className="text-green-400" style={{ mx: "20px" }}>
-                {result.data?.formatted} eth
-              </div>
-            
+            <div className="text-green-400" style={{ mx: "20px" }}>
+              {result.data?.formatted} eth
+            </div>
           </div>
         </div>
       )}
 
-      <div>
+      <div className="text-white">
         {isConnected && (
-          <GetTotalStakedToken
-            contractAddress={contractAddress}
-            contractAbi={deepStakingAbi}
-          />
+          <TotalStakeContextProvider>
+            <GetTotalStakedToken />
+          </TotalStakeContextProvider>
         )}
 
         {isConnected && (
@@ -94,8 +90,8 @@ const Wallets = () => {
         )}
 
         {address && <ApproveStakeWrapper />}
-
-        {/* {address && <WithDraw />} */}
+        <div className="mt-10">{address && <WithDraw />}</div>
+        
       </div>
     </div>
   );

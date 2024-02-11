@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Approve } from "./Approve";
-import { StakeToken } from "./StakeToken";
+
 
 const ApproveStakeWrapper = () => {
   return (

@@ -1,31 +1,45 @@
-import React, { useState } from "react";
-
+import React, { useEffect } from 'react'
+import { useWriteContract } from 'wagmi';
+import GetTotalStakedToken from './GetTotalStakedToken';
+import { contractAddress, rewardTokenAddress, RewardAbi,deepStakingAbi } from "../../ABI/abi";
 import { parseEther } from "viem";
 
-import { contractAddress, deepStakingAbi } from "../../ABI/abi";
+const StakeToken = ({isConfirmed,amount}) => {
+  console.log(isConfirmed, "confirmed")
+  console.log(amount, "amount")
+ 
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+    const { data: hash, writeContract, isPending, status } = useWriteContract();
+    useEffect(() => {
+        if (isConfirmed) {
+          console.log(hash, "hash")
+      
+    
+            writeContract({
+              address: contractAddress,
+              deepStakingAbi,
+              functionName: "staking",
+              args: [parseEther(amount)],
+            });
+    
+            
+        
+            
+          }
+      
+    
+      
+    }, [isConfirmed,amount])
+    
 
-import { useWriteContract } from "wagmi";
+    
 
-export const StakeToken = ({ tokenAmount }) => {
-
-
+    // const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    // useWaitForTransactionReceipt({
+    // hash,
+    // });ss
   return (
-    <div>
-      {writeContract({
-                address: contractAddress,
-                abi: deepStakingAbi,
-                functionName: "staking",
-                args: [parseEther(tokenAmount)],
-      })}
-    </div>
-  );
-};
+    <>{hash && hash}</> )
+}
+
+export default StakeToken
