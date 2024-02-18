@@ -1,9 +1,16 @@
-// import React from 'react'
+import { useRewardStore } from '@/hooks/use-RewardStore';
+import React, { useContext } from 'react'
+import TotalRewardContext from '../context/rewardContext'
 
-// const RewardBalance = ({userAddress}) => {
-//   return (
-//     <div>RewardBalance</div>
-//   )
-// }
+const RewardBalance = () => {
+  const reward = useRewardStore((state) => state.reward);
+  console.log(reward)
+    
 
-// export default RewardBalance
+    
+  return (
+    <div>{reward}</div>
+  )
+}
+
+export default RewardBalance

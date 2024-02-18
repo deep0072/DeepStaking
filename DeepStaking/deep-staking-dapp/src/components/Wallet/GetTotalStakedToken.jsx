@@ -1,38 +1,35 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { formatEther } from "viem";
 import { useReadContract } from "wagmi";
 import { contractAddress, deepStakingAbi } from "../../ABI/abi";
 import TotalStakeContext from "../context/totalStakedCoinContext";
+import { create } from "zustand";
 
 const GetTotalStakedToken = () => {
-  const {status,setStatus}=useContext(TotalStakeContext)
-  if (status){
+  
+
+
+
     const result = useReadContract({
       abi: deepStakingAbi,
       address: contractAddress,
       functionName: "getTotalStakedTokenInContract",
     });
- 
 
     return (
-      <div>
-        {/* <button
-          
-            class="text-white bg-green-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-          >
-          </button> */}
-        {result.data && formatEther(result?.data)} dt token
+      // <div class=" bg-black-900 rounded-md text-center py-4 px-6 flex flex-col items-center">
+      //   <div class="bg-green-900 rounded-md text-center py-4 px-6 flex flex-col items-center">
+      //   <span class=" text-white text-2xl font-bold">{result.data && formatEther(result?.data)}</span>
+      //   </div>
+       
+        
+      // </div>
+      <div className="text-green-400 rounded-lg text-xl border-b-2 border-green-600 hover:shadow-[0_0_4px_#00FF00,0_2px_10px_#00FF00] p-4">
+          staked Token :{result.data && formatEther(result?.data)}
       </div>
+      
     );
-
-  }else{
-    setStatus(true)
-
-  }
- 
- 
   
-
 };
 
 export default GetTotalStakedToken;

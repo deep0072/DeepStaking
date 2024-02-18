@@ -5,14 +5,14 @@ import { contractAddress, rewardTokenAddress, RewardAbi,deepStakingAbi } from ".
 import { parseEther } from "viem";
 
 const StakeToken = ({isConfirmed,amount}) => {
-  console.log(isConfirmed, "confirmed")
-  console.log(amount, "amount")
+  const {reward,incrReward} = useRewardStore((state) => state.incrReward);
+
  
 
     const { data: hash, writeContract, isPending, status } = useWriteContract();
     useEffect(() => {
         if (isConfirmed) {
-          console.log(hash, "hash")
+          
       
     
             writeContract({
