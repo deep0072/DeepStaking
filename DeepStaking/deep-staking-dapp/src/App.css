@@ -1,24 +1,20 @@
 #root {
   max-width: 100%;
- 
+
   padding: 10rem;
   margin: auto;
   text-align: center;
   height: 100%;
 }
 
-body{
- 
+body {
   /* /* background-color: #55efc4; */
-  background-image: linear-gradient(315deg, #55efc4 0%, #000000 74%); */
+  background-image: linear-gradient(315deg, #55efc4 0%, #000000 74%);
   /* background: rgb(2,0,36);
   background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,71,9,1) 35%, rgba(0,212,255,1) 100%); */
-  background: rgb(2,0,36);
+  background: rgb(2, 0, 36);
   background-image: linear-gradient(to bottom, black, #333);
-
 }
-
-
 
 @keyframes logo-spin {
   from {

@@ -1,13 +1,20 @@
-import { Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-export function ButtonLoader({props}) {
+export function ButtonLoader({ props }) {
+  console.log(props, "props");
 
   return (
     <Button disabled>
       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-      {props?.approve? <>approving</>: props?.staking? <> staking please wait</>:<>Please wait</>}
+      {props?.approve ? (
+        <>approving</>
+      ) : props?.staking ? (
+        <> staking please wait</>
+      ) : (
+        <>Please wait</>
+      )}
     </Button>
-  )
+  );
 }

@@ -1,16 +1,24 @@
-import { useRewardStore } from '@/hooks/use-RewardStore';
-import React, { useContext } from 'react'
-import TotalRewardContext from '../context/rewardContext'
+import { contractAddress, deepStakingAbi } from "@/ABI/abi";
+import React, { useContext, useEffect, useState } from "react";
+import { formatEther } from "viem";
+import { useReadContract } from "wagmi";
+import useRewardStore from "../store/RewardStore";
 
-const RewardBalance = () => {
-  const reward = useRewardStore((state) => state.reward);
-  console.log(reward)
-    
+export const RewardBalance = ({ userAddress }) => {
+  const { timeStamp } = useRewardStore();
 
-    
-  return (
-    <div>{reward}</div>
-  )
-}
+  const { data, refetch } = useReadContract({
+    abi: deepStakingAbi,
+    address: contractAddress,
+    functionName: "getReward", // Replace with the actual function name
+    args: [userAddress],
+  });
 
-export default RewardBalance
+  useEffect(() => {
+    refetch();
+  }, [timeStamp, refetch]);
+
+  console.log("reward balance...", data);
+
+  return <div> {data ? formatEther(data) : 0} reward balance</div>;
+};

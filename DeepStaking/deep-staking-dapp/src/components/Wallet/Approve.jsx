@@ -2,11 +2,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import React, { useState } from "react";
 import { parseEther } from "viem";
-import {
-  useSimulateContract,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import {
   contractAddress,
@@ -18,92 +14,95 @@ import {
 import { CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { ButtonLoader } from "./utils/Loader";
-import StakeToken from "./StakeToken";
-import { useRewardStore } from "@/hooks/use-RewardStore";
+
 import { useEffect } from "react";
+import useStakeStore from "../store/StakeStore";
 
+import useRewardStore from "../store/RewardStore";
+import useWalletBalance from "../store/WalletBalanceStore";
 
-export const Approve = ({userAddress}) => {
-  console.log(userAddress,"apprve address")
+export const Approve = ({ userAddress }) => {
+  const { timeStamp, setStakeBalance } = useStakeStore();
+  const { setReward } = useRewardStore();
+  const { setWalletBalance } = useWalletBalance();
+
   const [confirmedTxn, setConfirmedTxn] = useState({
     approve: "",
     staking: "",
   });
   const [amount, setAmount] = useState("");
-  const incrReward  = useRewardStore((state)=>state.incrReward);
 
-  const { data: hash, writeContract, isPending, status } = useWriteContract();
+  const {
+    data: hashApprove,
+    writeContract: writeContractApprove,
+    isPending: isPendingApprove,
+    status: statusApprove,
+  } = useWriteContract();
+  const {
+    data: hashStake,
+    writeContract: writeContractStake,
+    isPending: isPendingStake,
+    status: statusStake,
+  } = useWriteContract();
 
   const handleClick = async () => {
     try {
-      confirmedTxn.approve = true;
-      confirmedTxn.staking = false;
-      setConfirmedTxn(confirmedTxn);
       // First, approve the token transfer
-      await writeContract({
+      writeContractApprove({
         address: rewardTokenAddress,
         abi: RewardAbi,
         functionName: "approve",
         args: [contractAddress, parseEther(amount)],
       });
+
+      setConfirmedTxn(confirmedTxn);
     } catch (error) {
       // Handle any errors that occur during the process
       console.error("An error occurred:", error);
     }
   };
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
 
-    if (isConfirmed) {
-      confirmedTxn.staking = true;
-      confirmedTxn.approve = false;
-      setConfirmedTxn(confirmedTxn);
-      writeContract({
+  const { isLoading: isConfirmingApprove, isSuccess: isConfirmedApprove } =
+    useWaitForTransactionReceipt({
+      hash: hashApprove,
+    });
+  const {
+    isLoading: isConfirmingStake,
+    isSuccess: isConfirmedStake,
+    refetch,
+  } = useWaitForTransactionReceipt({
+    hash: hashStake,
+  });
+
+  console.log("outside useEffect isConfirmedApprove:", isConfirmedApprove);
+  console.log(" outside useEffect isConfirmedStake:", isConfirmedStake);
+
+  useEffect(() => {
+    console.log(
+      "inside the use effect isConfirmedApprove:",
+      isConfirmedApprove,
+    );
+    console.log(" inside the use effect isConfirmedStake:", isConfirmedStake);
+    if (isConfirmedApprove && !isConfirmedStake) {
+      writeContractStake({
         address: contractAddress,
         abi: deepStakingAbi,
         functionName: "staking",
         args: [parseEther(amount)],
       });
 
+      setConfirmedTxn(confirmedTxn);
+      console.log(`stakeHash: ${hashStake}`);
+    } else {
+      setStakeBalance();
+
+      console.log("isConfirmedStake timeStamp:", timeStamp);
+
+      setStakeBalance(); // here update stakeBalance
+      setReward(); // update rewardBalance
+      setWalletBalance(); // update wallet balance
     }
-
-    const handleStakingConfirmation = async () => {
-      try {
-        await incrReward(userAddress); // This will update the reward value
-      } catch (error) {
-        console.error("Error updating reward:", error);
-      }
-    };
-
-    useEffect(() => {
-      if (isConfirmed && confirmedTxn.staking) {
-        handleStakingConfirmation();
-      }
-    }, [isConfirmed, confirmedTxn.staking, incrReward]);
-
-
-
-
-  // useEffect(() => {
-  //   if (isConfirmed && confirmedTxn.staking) {
-
-  //     const handleStakingConfirmation = async () => {
-  //       try {
-  //         await incrReward();
-  //       } catch (error) {
-  //         console.error("Error updating reward:", error);
-  //       }
-  //     };
-  //     handleStakingConfirmation();
-  //   }
-  // }, [isConfirmed, confirmedTxn.staking, incrReward]);
- 
-  
-    // Call incrReward to update the reward value after staking is confirmed
-   
-  
+  }, [isConfirmedApprove, isConfirmedStake]);
 
   return (
     <div>
@@ -116,8 +115,11 @@ export const Approve = ({userAddress}) => {
           placeholder="Stake your token"
         />
         <CardFooter className="flex justify-content-end">
-          {isPending || isConfirming ? (
-            <ButtonLoader props={confirmedTxn} />
+          {isPendingApprove ||
+          isPendingStake ||
+          isConfirmingStake ||
+          isConfirmingApprove ? (
+            <ButtonLoader props={[isConfirmingStake, isConfirmingApprove]} />
           ) : (
             <Button
               className=" w-40 m-auto mt-5  flex justify-center items-center text-sky-200 border-2 rounded-lg border-sky-200 hover:shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]"

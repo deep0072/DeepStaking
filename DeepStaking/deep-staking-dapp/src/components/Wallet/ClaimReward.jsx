@@ -1,20 +1,18 @@
 import { contractAddress, deepStakingAbi } from "@/ABI/abi";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button } from "../ui/button";
 import Lottie from "react-lottie";
 import animationData from "../lottie/claimAnimation.json";
-import { useReadContract, useWriteContract } from "wagmi";
+import { useWriteContract } from "wagmi";
 import { useTransactionReceipt } from "@/hooks/use-transaction-receipt";
 import { ButtonLoader } from "./utils/Loader";
-
-import { formatEther } from "viem";
-import { useRewardStore } from "@/hooks/use-RewardStore";
-import { useEffect } from "react";
+import useRewardStore from "../store/RewardStore";
+import useWalletBalance from "../store/WalletBalanceStore";
 
 const ClaimReward = ({ userAddress }) => {
+  const { setReward } = useRewardStore();
   const { data: hash, writeContract, isPending, status } = useWriteContract();
-  
-  const {incrReward} = useRewardStore();
+  const { setWalletBalance } = useWalletBalance();
 
   const defaultOptions = {
     loop: false,
@@ -24,9 +22,9 @@ const ClaimReward = ({ userAddress }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const handleClick = async () => {
+  const handleClick = () => {
     try {
-      await writeContract({
+      writeContract({
         address: contractAddress,
         abi: deepStakingAbi,
         functionName: "claimReward",
@@ -42,7 +40,13 @@ const ClaimReward = ({ userAddress }) => {
       hash,
     });
 
-   
+  useEffect(() => {
+    if (isConfirmed) {
+      console.log("confirmed reward claim");
+      setReward(); // update reward balance and claimed reward
+      setWalletBalance();
+    }
+  }, [isConfirmed]);
 
   // useSetRewardBalance({userAddress})
 

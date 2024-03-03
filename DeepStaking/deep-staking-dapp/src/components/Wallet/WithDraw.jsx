@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { parseEther } from "viem";
 import { useWriteContract } from "wagmi";
 import { contractAddress, deepStakingAbi } from "../../ABI/abi";
@@ -9,17 +9,17 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
 import { Input } from "../ui/input";
 import { ButtonLoader } from "./utils/Loader";
 import { useTransactionReceipt } from "@/hooks/use-transaction-receipt";
 import GetTotalStakedToken from "./GetTotalStakedToken";
-import TotalStakeContextProvider from "../context/TotalStakeContextProvider";
+
+import useRewardStore from "../store/RewardStore";
+import useStakeStore from "../store/StakeStore";
+import useWalletBalance from "../store/WalletBalanceStore";
 
 // const defaultOptions = {
 //   loop: true,
@@ -30,6 +30,9 @@ import TotalStakeContextProvider from "../context/TotalStakeContextProvider";
 //   },
 // };
 const WithDraw = () => {
+  const { setReward } = useRewardStore();
+  const { setStakeBalance } = useStakeStore();
+  const { setWalletBalance } = useWalletBalance();
   const [value, setValue] = useState("");
   const [visible, setVisible] = useState(true);
 
@@ -44,34 +47,33 @@ const WithDraw = () => {
 
   const { data: hash, writeContract, isPending, status } = useWriteContract();
 
-  const handleClick = async () => {
-    console.log(isPending,"isPending")
-   
+  const handleClick = () => {
+    console.log(isPending, "isPending");
 
     try {
       // First, approve the token transfer
-      let txn = await writeContract({
+      let txn = writeContract({
         address: contractAddress,
         abi: deepStakingAbi,
         functionName: "withDraw",
         args: [value],
       });
-    
     } catch (error) {
       // Handle any errors that occur during the process
       console.error("An error occurred:", error);
     }
   };
- 
-    const { isLoading: isConfirming, isSuccess: isConfirmed } =
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useTransactionReceipt({
       hash,
     });
 
-  
- 
-
-
+  useEffect(() => {
+    setReward(); // update rewardBalance
+    setStakeBalance(); // update stakeBalance
+    setWalletBalance(); // update wallet balance
+  }, [isConfirmed]);
 
   return (
     <div>
@@ -115,11 +117,8 @@ const WithDraw = () => {
             )}
           </div>
 
-          <div style={{position:"fixed", top:0,right:0, margin:5}}>
-            
-            <TotalStakeContextProvider>
-              <GetTotalStakedToken />
-            </TotalStakeContextProvider>
+          <div style={{ position: "fixed", top: 0, right: 0, margin: 5 }}>
+            <GetTotalStakedToken />
           </div>
         </DrawerContent>
       </Drawer>

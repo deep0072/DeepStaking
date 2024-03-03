@@ -8,8 +8,7 @@ import {
 } from "../ui/card";
 import { Approve } from "./Approve";
 
-
-const ApproveStakeWrapper = ({userAddress}) => {
+const ApproveStakeWrapper = () => {
   return (
     <Card class=" border-2 border-green-400 rounded-lg mx-auto w-[350px] hover:shadow-[0_1px_3px_#00FF00,0_1px_1px_#00FF00,1px_0_1px_#00FF00] p-4">
       <CardHeader>
@@ -18,7 +17,7 @@ const ApproveStakeWrapper = ({userAddress}) => {
       </CardHeader>
       <CardContent>
         <div className="grid w-full items-center gap-4">
-          <Approve userAddress={userAddress}/>
+          <Approve />
         </div>
       </CardContent>
     </Card>
