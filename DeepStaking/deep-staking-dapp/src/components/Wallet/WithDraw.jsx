@@ -100,10 +100,11 @@ const WithDraw = () => {
                 <ButtonLoader />
               ) : (
                 <Button
-                  className=" w-40 m-auto mt-5  flex justify-center items-center text-sky-200 border-2 rounded-lg border-sky-200 hover:shadow-[0_0_2px_#fff,inset_0_0_2px_#fff,0_0_5px_#08f,0_0_15px_#08f,0_0_30px_#08f]"
-                  onClick={handleClick}
-                >
-                  Submit
+                className=" w-40 m-auto mt-5 text-black  flex justify-center items-center text-red-700 border-2 rounded-lg border-sky-200 hover:shadow-[0_0_2px_#AA0000,inset_0_0_2px_#AA0000,0_0_5px_#C60C30,0_0_15px_#C60C30,0_0_30px_#FF0800]"
+                variant="outline"
+                onClick={handleClick}
+              >
+                  withdraw
                 </Button>
               )}
 
