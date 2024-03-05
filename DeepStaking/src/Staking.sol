@@ -10,7 +10,6 @@ pragma solidity ^0.8.13;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {RewardToken} from "./RewardToken.sol";
 
-
 error Staking__TransferFailed();
 error Staking__WithdrawalFaile();
 error Staking_NeedsMoreThanZero();
@@ -25,12 +24,12 @@ contract DeepStaking {
     // a mapping of how much rewards each address has been paid
     mapping(address => uint256) public s_balances;
 
-   
     // a mapping of how much rewards each address has to claim;
     mapping(address => uint256) public s_rewards;
     uint256 public s_totalStakedToken;
     uint256 public s_rewardPerTokenStored; // this is the exact token will be given to staker as a reward
     uint256 public s_lastUpdateTime;
+    mapping(address => uint256) public totalRewardsClaimed;
 
     //1000000000000000000
 
@@ -45,7 +44,6 @@ contract DeepStaking {
         }
         _;
     }
-
 
     modifier updateReward(address account) {
         s_rewardPerTokenStored = rewardPerToken();
@@ -90,8 +88,7 @@ contract DeepStaking {
         // keep track how much   token user staked
         // how mouch token staked in contract
         // transfer token to this contract
-        
-      
+
         s_balances[msg.sender] += tokenAmount;
         s_totalStakedToken = s_totalStakedToken + tokenAmount;
 
@@ -134,25 +131,37 @@ contract DeepStaking {
         // so person 1 will get reward  at 6th second is 50 token ==> total reward from 550
         // person 2 will get reward  at 6th second is 50 token ==> total reward from 50
         uint256 reward = s_rewards[msg.sender];
-        bool success = s_rewardToken.transfer(msg.sender, reward);
-        if (!success) {
-            revert Staking__TransferFailed();
+        if (reward > 0) {
+            s_rewards[msg.sender] = 0;
+            totalRewardsClaimed[msg.sender] += reward;
+            bool success = s_rewardToken.transfer(msg.sender, reward);
+            if (!success) {
+                revert Staking__TransferFailed();
+            }
         }
     }
 
-    
-
-
-    function claimedReward(address _user) public view returns(uint256) {
+    function getReward(address _user) public view returns (uint256) {
         return s_rewards[_user];
     }
 
-    function getTotalStakedTokenByUser(address _user) public view returns(uint256) {
+    function getTotalStakedTokenByUser(address _user)
+        public
+        view
+        returns (uint256)
+    {
         return s_balances[_user];
-
     }
-    function getTotalStakedTokenInContract() public view returns(uint256) {
-        return s_totalStakedToken;
 
+    function getTotalStakedTokenInContract() public view returns (uint256) {
+        return s_totalStakedToken;
+    }
+
+    function getTotalRewardsClaimedByUser(address _user)
+        public
+        view
+        returns (uint256)
+    {
+        return totalRewardsClaimed[_user];
     }
 }
