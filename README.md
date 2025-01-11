@@ -11,7 +11,7 @@ DeepStaking is a decentralized application (dApp) designed for staking on the Et
 - **Frontend:** Built with React and Vite for a fast and responsive user interface.
 - **Smart Contracts:** Developed using Solidity and deployed on the Ethereum blockchain.
 - **Local Development:** Uses Foundry, a modular toolkit for Ethereum application development, which includes tools like Forge, Cast, Anvil, and Chisel.
-- **Metadata Storage:** Pinata is used for storing token metadata efficiently.
+
 - **Reward System:** Users can claim rewards and live track each reward they earn.
 
 ## Documentation
